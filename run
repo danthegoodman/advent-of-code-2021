@@ -1,0 +1,42 @@
+#!/usr/bin/env zsh
+
+script_dir=${0:a:h}
+cd $script_dir
+
+args=(--config deno.json --allow-net=adventofcode.com --allow-env=AOC_SAVE_TESTS)
+cmd="$1"
+
+if [ "$cmd" = "save" ]; then
+  export AOC_SAVE_TESTS=true
+  cmd="test"
+fi
+
+if [ "$cmd" = "test" ]; then
+  if [ -z "$2" ]; then
+    exec deno test "$args[@]"
+  elif [ -f "solutions/$2.test.ts" ]; then
+    exec deno test "$args[@]" "solutions/$2.test.ts"
+  else
+    echo "(Invalid test id)"
+  fi
+fi
+
+if [ "$cmd" = "script" ]; then
+  if [ -f "scripts/$2" ]; then
+    exec deno run "$args[@]" "scripts/$2"
+  else
+    echo "(Invalid script file)"
+  fi
+fi
+
+cat <<EOF
+Usage:
+./run test           Runs all tests
+./run test 01        Runs a day's tests
+
+./run save           Cache all test's output as valid
+./run save 04        Cache a day's output as valid
+
+./run script [file]  Runs a script in scripts/
+EOF
+

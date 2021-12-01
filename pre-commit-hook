@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+set -eu
+deno lint --config ./deno.json
+deno fmt --config ./deno.json --check
