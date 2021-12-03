@@ -44,5 +44,5 @@ function solveB(input: string) {
     }
     prev = next;
   }
-  return count + 1;
+  return count;
 }
