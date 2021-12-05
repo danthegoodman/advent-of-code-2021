@@ -13,3 +13,25 @@ export function sumBy<T>(data: Iterable<T>, fn: (t: T) => number) {
   }
   return sum;
 }
+
+export function minBy<T>(data: Iterable<T>, fn: (t: T) => number) {
+  let result = Number.POSITIVE_INFINITY;
+  for (const s of data) {
+    const val = fn(s);
+    if (val < result) {
+      result = val;
+    }
+  }
+  return result;
+}
+
+export function maxBy<T>(data: Iterable<T>, fn: (t: T) => number) {
+  let result = Number.NEGATIVE_INFINITY;
+  for (const s of data) {
+    const val = fn(s);
+    if (val > result) {
+      result = val;
+    }
+  }
+  return result;
+}
