@@ -1,20 +1,24 @@
 import { TestBuilder } from "../util/test-builder.ts";
+import { memoize, sumBy } from "../util/common-fn.ts";
 
-const example = `\
-`;
+const example = `3,4,3,1,2`;
+
+const memoCountFish: (n: number, daysRemain: number) => number = memoize(
+  (n, daysRemain) => {
+    if (daysRemain <= n) return 1;
+    return memoCountFish(7, daysRemain - n) + memoCountFish(9, daysRemain - n);
+  },
+);
 
 new TestBuilder(import.meta)
   .section("a")
-  .example(-1, () => solveA(example))
-  .actual(solveA)
+  .example(26, () => solve(example, 18))
+  .example(5934, () => solve(example, 80))
+  .actual((input) => solve(input, 80))
   .section("b")
-  .example(-1, () => solveB(example))
-  .actual(solveB);
+  .actual((input) => solve(input, 256));
 
-function solveA(input: string) {
-  return input.length;
-}
-
-function solveB(input: string) {
-  return input.length;
+function solve(input: string, days: number) {
+  const fishes = input.split(",").map(Number);
+  return sumBy(fishes, (f) => memoCountFish(f, days));
 }

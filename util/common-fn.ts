@@ -35,3 +35,19 @@ export function maxBy<T>(data: Iterable<T>, fn: (t: T) => number) {
   }
   return result;
 }
+
+// deno-lint-ignore ban-types
+export function memoize<T extends Function>(fn: T): T {
+  const memory = new Map<string, unknown>();
+  //@ts-expect-error - warning that if additional properties were to exist on
+  // 'fn', we would be losing them while still communicating the type.
+  return function (...args) {
+    const key = JSON.stringify(args);
+    const remembered = memory.get(key);
+    if (remembered !== undefined) return remembered;
+
+    const result = fn(...args);
+    memory.set(key, result);
+    return result;
+  };
+}
